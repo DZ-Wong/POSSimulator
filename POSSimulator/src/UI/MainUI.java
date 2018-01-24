@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pay.Pay;
 import pay.WXPayUtil;
+import pay.WxPay;
+import pay.WxQuery;
 
 /**
  *
@@ -37,6 +39,7 @@ public class MainUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jPanel3 = new javax.swing.JPanel();
@@ -57,6 +60,7 @@ public class MainUI extends javax.swing.JFrame {
         jBPay = new javax.swing.JButton();
         jBQuery = new javax.swing.JButton();
         jBRefund = new javax.swing.JButton();
+        jCBFlag = new javax.swing.JCheckBox();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -169,6 +173,11 @@ public class MainUI extends javax.swing.JFrame {
             }
         });
 
+        jCBFlag.setText("机构接入标识");
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jCBFlag, org.jdesktop.beansbinding.ELProperty.create("${selected}"), jCBFlag, org.jdesktop.beansbinding.BeanProperty.create("selected"));
+        bindingGroup.addBinding(binding);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -188,6 +197,9 @@ public class MainUI extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jCBFlag)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jBQuery, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
                             .addComponent(jBPay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jBRefund, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -208,7 +220,9 @@ public class MainUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTFCode, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(75, 75, 75)
+                .addGap(26, 26, 26)
+                .addComponent(jCBFlag)
+                .addGap(26, 26, 26)
                 .addComponent(jBPay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jBQuery, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -236,6 +250,8 @@ public class MainUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -254,7 +270,11 @@ public class MainUI extends javax.swing.JFrame {
         
         rw = new ReadAndWrite();
         request = rw.read();
-        batchNo = request.get("batchNo");
+        
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
+        Date date1 = new Date();
+        batchNo = sdf1.format(date1);
+//        batchNo = request.get("batchNo");
         systrace = WXPayUtil.strAddOne(request.get("systrace"));
         try {
             rw.write(batchNo, systrace);
@@ -280,6 +300,10 @@ public class MainUI extends javax.swing.JFrame {
             jTAShow2.append("rc_detail:参数缺失\n");
             return;
         }
+        
+        if (jCBFlag.isSelected()) {
+            request.put("orgFlag", String.valueOf(1));
+        }
 
         try {
             Pay pay = new Pay();    
@@ -300,7 +324,11 @@ public class MainUI extends javax.swing.JFrame {
         
         rw = new ReadAndWrite();
         request = rw.read();
-        batchNo = request.get("batchNo");
+        
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
+        Date date1 = new Date();
+        batchNo = sdf1.format(date1);
+//        batchNo = request.get("batchNo");
         systrace = WXPayUtil.strAddOne(request.get("systrace"));
         try {
             rw.write(batchNo, systrace);
@@ -309,7 +337,7 @@ public class MainUI extends javax.swing.JFrame {
         }
         orderId = jTFOrderId.getText();
         jTAShow.append("begin ...\n");
-
+        
         if ( orderId != null &&orderId.length() != 0) {
             request.put("orderId", orderId.trim());
         } else {
@@ -317,11 +345,17 @@ public class MainUI extends javax.swing.JFrame {
             jTAShow2.append("rc_detail:参数缺失\n");
             return;
         }
+        if (jCBFlag.isSelected()) {
+            request.put("orgFlag", String.valueOf(1));
+        }
         try {
             Pay pay = new Pay();
-            jTAShow.append(request.toString());
+            String show = request.toString();
+            String show2 = show.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}");
+            jTAShow.append(show2);
             response = pay.barcodeQuery(request);
-            jTAShow2.append(response);
+            jTAShow2.append( response.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}"));
+//            jTAShow2.append(response);
         } catch (Exception e) {
             jTAShow2.append(e.getMessage());
         }
@@ -334,7 +368,10 @@ public class MainUI extends javax.swing.JFrame {
         
         rw = new ReadAndWrite();
         request = rw.read();
-        batchNo = request.get("batchNo");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
+        Date date1 = new Date();
+        batchNo = sdf1.format(date1);
+//        batchNo = request.get("batchNo");
         systrace = WXPayUtil.strAddOne(request.get("systrace"));
         try {
             rw.write(batchNo, systrace);
@@ -351,17 +388,122 @@ public class MainUI extends javax.swing.JFrame {
             jTAShow2.append("rc_detail:参数缺失\n");
             return;
         }
+        if (jCBFlag.isSelected()) {
+            request.put("orgFlag", String.valueOf(1));
+        }
         try {
             Pay pay = new Pay();
-            jTAShow.append(request.toString());
+//            jTAShow.append(request.toString());
+            String show = request.toString();
+            String show2 = show.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}");
+            jTAShow.append(show2);
+            
+            
             response = pay.barcodeRefund(request);
-            jTAShow2.append(response);
+            
+            
+            jTAShow2.append( response.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}"));
+//            jTAShow2.append(response);
         } catch (Exception e) {
             jTAShow2.append(e.getMessage());
         }
     }//GEN-LAST:event_jBRefundActionPerformed
 
-    /**
+    private boolean doCheck(String id){
+        switch(id){
+            case "841100":
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                Date date = new Date();
+                orderId = sdf.format(date) + batchNo + systrace;
+                jTFOrderId.setText(orderId);
+                authCode = jTFCode.getText();
+                amt = Long.parseLong(jTFAmt.getText());
+
+                if (authCode != null && orderId != null && amt != 0L && authCode.length() != 0 && orderId.length() != 0) {
+                    request.put("orderId", orderId.trim());
+                    request.put("barcode", authCode.trim());
+                    request.put("txnAmt", String.valueOf(amt));
+                    request.put("txnId", id);
+                    return true;
+                }
+                break;
+            case "841110":
+            case "841500":
+                orderId = jTFOrderId.getText();
+                if ( orderId != null &&orderId.length() != 0) {
+                     request.put("orderId", orderId.trim());
+                     request.put("txnId", id);
+                     return true;
+                }
+                break;
+            default:
+        }
+        
+        jTAShow2.append("rc :91\n");
+        jTAShow2.append("rc_detail:参数缺失\n");
+        return false;
+
+    }
+    
+    private String doTrans(String id) throws Exception{
+        try{
+            switch(id){
+                case "841100":
+                    WxPay wxPay = new WxPay();
+                    return wxPay.handle(request);
+                case "841500":
+                case "841110":
+                    WxQuery wxQuery = new WxQuery();
+                    return wxQuery.handle(request);
+                default:
+                    return null;
+            }
+        }catch(Exception ex){
+            throw new Exception(ex);
+        }
+        
+    }
+    
+    private void doShow(String id){
+        
+        jTAShow.setText("");
+        jTAShow2.setText("");
+        
+        rw = new ReadAndWrite();
+        request = rw.read();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
+        Date date1 = new Date();
+        batchNo = sdf1.format(date1);
+        systrace = WXPayUtil.strAddOne(request.get("systrace"));
+        try {
+            rw.write(batchNo, systrace);
+        } catch (IOException ex) {
+            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        jTAShow.append("begin ...\n");
+
+        if ( !doCheck(id) ){
+            return ;
+        }        
+        
+        if (jCBFlag.isSelected()) {
+            request.put("orgFlag", String.valueOf(1));
+        }
+        try {
+    
+            String show = request.toString();
+            String show2 = show.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}");
+            jTAShow.append(show2);
+            response = doTrans(id);
+            jTAShow2.append( response.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}"));
+
+        } catch (Exception e) {
+            jTAShow2.append(e.getMessage());
+        }
+        
+    }
+        /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -407,6 +549,7 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JButton jBPay;
     private javax.swing.JButton jBQuery;
     private javax.swing.JButton jBRefund;
+    private javax.swing.JCheckBox jCBFlag;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -423,5 +566,6 @@ public class MainUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTFAmt;
     private javax.swing.JTextField jTFCode;
     private javax.swing.JTextField jTFOrderId;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

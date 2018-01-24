@@ -47,4 +47,11 @@ public class BarcodePayBody {
     public void setGoodInfo(GoodInfo goodInfo) {
         this.goodInfo = goodInfo;
     }
+
+    @Override
+    public String toString() {
+        return "BarcodePayBody{" + "txnAmt=" + txnAmt + ", currency=" + currency + ", barcode=" + barcode + ", orderId=" + orderId + ", goodInfo=" + goodInfo + '}';
+    }
+    
+    
 }

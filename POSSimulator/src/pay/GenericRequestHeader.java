@@ -8,6 +8,8 @@ package pay;
 public class GenericRequestHeader implements RequestHeader {
     private String version;
     private String txnId;
+    
+    private String orgId;
     private String mid;
     private String tid;
     private String systrace;
@@ -27,12 +29,29 @@ public class GenericRequestHeader implements RequestHeader {
         this.shiftNo = shiftNo;
         this.timestamp = timestamp;
     }
+    
+    public GenericRequestHeader(
+        String version, String txnId, String orgId, String mid, String tid, String systrace, String batchNo,
+        String shiftNo, long timestamp) {
+        this.version = version;
+        this.txnId = txnId;
+        this.orgId = orgId;
+        this.mid = mid;
+        this.tid = tid;
+        this.systrace = systrace;
+        this.batchNo = batchNo;
+        this.shiftNo = shiftNo;
+        this.timestamp = timestamp;
+    }
 
     @Override
     public String getTxnId() {
         return txnId;
     }
-
+    @Override
+    public String getOrgId() {
+        return orgId;
+    }
     @Override
     public String getMid() {
         return mid;

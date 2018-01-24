@@ -19,7 +19,11 @@ public interface RequestHeader {
      * @return 鍟嗘埛鍙枫��
      */
     String getMid();
-
+   /**
+     * 获取机构号
+     * @return
+     */
+    String getOrgId();
     /**
      * 鑾峰彇缁堢鍙枫��
      * @return 缁堢鍙枫��

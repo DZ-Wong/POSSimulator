@@ -37,7 +37,7 @@ public class GenericRequest<T> {
     /**
      * 绛惧悕淇℃伅銆�
      */
-    private String signature;
+    private String sign;
 
     private transient Map<String, Object> attributies = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class GenericRequest<T> {
         header = requestObject.getObject("header", GenericRequestHeader.class);
         bodyObject = requestObject.getJSONObject("body");
         bodyData = bodyObject.toJSONString();
-        signature = requestObject.getString("signture");
+        sign = requestObject.getString("sign");
     }
     
     public GenericRequest(){
@@ -81,8 +81,8 @@ public class GenericRequest<T> {
         this.bodyObject = bodyObject;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setSign(String signature) {
+        this.sign = signature;
     }
 
     public void setAttributies(Map<String, Object> attributies) {
@@ -113,8 +113,8 @@ public class GenericRequest<T> {
         this.body = body;
     }
 
-    public String getSignature() {
-        return signature;
+    public String getSign() {
+        return sign;
     }
 
     public Map<String, Object> getAttributies() {
@@ -132,9 +132,10 @@ public class GenericRequest<T> {
     public String toJsonString() {
         return JSONObject.toJSONString(this);
     }
+
     @Override
     public String toString() {
-        return "GenericRequest{" + "originData='" + originData + '\'' + ", header=" + header +
-               ", bodyData='" + bodyData + '\'' + ", signature='" + signature + '\'' + '}';
+        return "GenericRequest{" + "originData=" + originData + ", headerData=" + headerData + ", header=" + header + ", bodyData=" + bodyData + ", bodyObject=" + bodyObject + ", body=" + body + ", sign=" + sign + ", attributies=" + attributies + '}';
     }
+    
 }

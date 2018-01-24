@@ -265,148 +265,15 @@ public class MainUI extends javax.swing.JFrame {
     
     private void jBPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPayActionPerformed
         // TODO add your handling code here:    
-        jTAShow.setText("");
-        jTAShow2.setText("");
-        
-        rw = new ReadAndWrite();
-        request = rw.read();
-        
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
-        Date date1 = new Date();
-        batchNo = sdf1.format(date1);
-//        batchNo = request.get("batchNo");
-        systrace = WXPayUtil.strAddOne(request.get("systrace"));
-        try {
-            rw.write(batchNo, systrace);
-        } catch (IOException ex) {
-            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date date = new Date();
-        orderId = sdf.format(date) + batchNo + systrace;
-        jTFOrderId.setText(orderId);
-        
-        authCode = jTFCode.getText();
-        amt = Long.parseLong(jTFAmt.getText());
-        jTAShow.append("begin ...\n");
-
-        if (authCode != null && orderId != null && amt != 0L && authCode.length() != 0 && orderId.length() != 0) {
-            request.put("orderId", orderId.trim());
-            request.put("barcode", authCode.trim());
-            request.put("txnAmt", String.valueOf(amt));
-        } else {
-            jTAShow2.append("rc :91\n");
-            jTAShow2.append("rc_detail:参数缺失\n");
-            return;
-        }
-        
-        if (jCBFlag.isSelected()) {
-            request.put("orgFlag", String.valueOf(1));
-        }
-
-        try {
-            Pay pay = new Pay();    
-            String show = request.toString();   
-            String show2 = show.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}");
-            jTAShow.append(show2);
-            response = pay.barcodePay(request);    
-            jTAShow2.append( response.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}"));
-        } catch (Exception e) {
-            jTAShow2.append(e.getMessage());
-        }
+       this.doShow("841100");
     }//GEN-LAST:event_jBPayActionPerformed
 
     private void jBQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBQueryActionPerformed
-        // TODO add your handling code here:
-        jTAShow.setText("");
-        jTAShow2.setText("");
-        
-        rw = new ReadAndWrite();
-        request = rw.read();
-        
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
-        Date date1 = new Date();
-        batchNo = sdf1.format(date1);
-//        batchNo = request.get("batchNo");
-        systrace = WXPayUtil.strAddOne(request.get("systrace"));
-        try {
-            rw.write(batchNo, systrace);
-        } catch (IOException ex) {
-            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        orderId = jTFOrderId.getText();
-        jTAShow.append("begin ...\n");
-        
-        if ( orderId != null &&orderId.length() != 0) {
-            request.put("orderId", orderId.trim());
-        } else {
-            jTAShow2.append("rc :91\n");
-            jTAShow2.append("rc_detail:参数缺失\n");
-            return;
-        }
-        if (jCBFlag.isSelected()) {
-            request.put("orgFlag", String.valueOf(1));
-        }
-        try {
-            Pay pay = new Pay();
-            String show = request.toString();
-            String show2 = show.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}");
-            jTAShow.append(show2);
-            response = pay.barcodeQuery(request);
-            jTAShow2.append( response.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}"));
-//            jTAShow2.append(response);
-        } catch (Exception e) {
-            jTAShow2.append(e.getMessage());
-        }
+        this.doShow("841110");
     }//GEN-LAST:event_jBQueryActionPerformed
 
     private void jBRefundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRefundActionPerformed
-        // TODO add your handling code here:
-        jTAShow.setText("");
-        jTAShow2.setText("");
-        
-        rw = new ReadAndWrite();
-        request = rw.read();
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyMMdd");
-        Date date1 = new Date();
-        batchNo = sdf1.format(date1);
-//        batchNo = request.get("batchNo");
-        systrace = WXPayUtil.strAddOne(request.get("systrace"));
-        try {
-            rw.write(batchNo, systrace);
-        } catch (IOException ex) {
-            Logger.getLogger(MainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        orderId = jTFOrderId.getText();
-        jTAShow.append("begin ...\n");
-
-        if ( orderId != null &&orderId.length() != 0) {
-            request.put("orderId", orderId.trim());
-        } else {
-            jTAShow2.append("rc :91\n");
-            jTAShow2.append("rc_detail:参数缺失\n");
-            return;
-        }
-        if (jCBFlag.isSelected()) {
-            request.put("orgFlag", String.valueOf(1));
-        }
-        try {
-            Pay pay = new Pay();
-//            jTAShow.append(request.toString());
-            String show = request.toString();
-            String show2 = show.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}");
-            jTAShow.append(show2);
-            
-            
-            response = pay.barcodeRefund(request);
-            
-            
-            jTAShow2.append( response.replace(",", ",\n").replace("{", "{\n").replace("}", "\n}"));
-//            jTAShow2.append(response);
-        } catch (Exception e) {
-            jTAShow2.append(e.getMessage());
-        }
+        this.doShow("841500");
     }//GEN-LAST:event_jBRefundActionPerformed
 
     private boolean doCheck(String id){
